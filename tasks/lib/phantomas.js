@@ -392,13 +392,17 @@ Phantomas.prototype.formResult = function( results ) {
       }
     } );
 
+    var promiseOffenders;
+
     // process all runs
     _.each( results, function( promise ) {
       if ( promise.isFulfilled() ) {
         this.grunt.log.ok( 'Phantomas execution done.' );
 
-        var promiseValue = promise.value()[ 0 ].metrics,
+        var phantomasData = promise.value()[ 0 ],
+            promiseValue = phantomasData.metrics,
             metric;
+        promiseOffenders = phantomasData.offenders;
 
         for ( metric in promiseValue ) {
           if (
@@ -466,6 +470,8 @@ Phantomas.prototype.formResult = function( results ) {
                       ( ( entry.values[ len >> 1 ] + entry.values[ len >> 1 + 1 ] ) / 2 ) :
                       entry.values[ len >> 1 ] ).toFixed( 2 ) );
     }
+    
+    entries.offenders = promiseOffenders;
 
     resolve( entries );
   }.bind( this ) );
